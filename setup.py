@@ -28,6 +28,6 @@ setup(
 
     py_modules=['ansible_jupyter_kernel'],
     data_files=[
-        ('share/jupyter/kernels/ansible_jupyter', ['kernel.json']),
+        ('share/jupyter/kernels/ansible', ['kernel.json']),
     ],
 )

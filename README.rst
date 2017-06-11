@@ -3,6 +3,18 @@ ansible_jupyter_kernel
 
 WIP Jupyter kernel for executing Ansible plays
 
+Usage
+-----
+
+    $ git clone https://github.com/cben/ansible_jupyter_kernel
+    $ cd ansible_jupyter_kernel
+    $ pip3 install . [--user]
+
+(can't `pip install ansible_jupyter_kernel`, not uploaded to PyPI yet)
+
+Note that "develop mode" `pip install -e .` does not copy `kernel.json` into the correct place.
+You can manually create a directory `/usr/share/jupyter/kernels/ansible/`, `~/.local/share/jupyter/kernels/ansible/`, or `<virtualenv>/share/jupyter/kernels/ansible/` and copy `kernel.json` there.
+
 License
 -------
 
