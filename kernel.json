@@ -1,0 +1,5 @@
+{
+    "argv": ["python", "-m", "ansible_jupyter_kernel", "-f", "{connection_file}"],
+    "display_name": "Ansible",
+    "language": "ansible"
+}
