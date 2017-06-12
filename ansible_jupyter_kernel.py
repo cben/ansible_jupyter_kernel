@@ -17,13 +17,14 @@ class AnsibleKernel(Kernel):
     implementation_version = '0.1'
     language = 'Ansible'
     language_version = ansible_version
-    language_info = {
-        'name': 'ansible',
+    language_info = dict(
+        name = 'ansible',
         # https://stackoverflow.com/questions/332129/yaml-mime-type
         # Actually text/vnd.yaml was proposed but the proposal hasn't advanced.
-        'mimetype': 'text/vnd.yaml',
-        'file_extension': '.yml',
-    }
+        mimetype = 'text/vnd.yaml',
+        file_extension = '.yml',
+        codemirror_mode = 'yaml',
+    )
     banner = "Ansible kernel - WIP https://github.com/cben/ansible_jupyter_kernel"
 
     def __init__(self, *args, **kwargs):
