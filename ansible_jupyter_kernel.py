@@ -1,3 +1,4 @@
+import traceback
 import yaml
 
 from ipykernel.kernelbase import Kernel
@@ -11,6 +12,10 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.playbook.play import Play
 from ansible.vars import VariableManager
 from ansible.release import __version__ as ansible_version
+
+class UnknownInput(AnsibleParserError):
+    """Error in shorthand syntaxes this kernel accepts."""
+    # Not certain if this inheriting from AnsibleParserError is best, doesn't matter much.
 
 class AnsibleKernel(Kernel):
     implementation = 'ansible_jupyter_kernel'
@@ -45,23 +50,25 @@ class AnsibleKernel(Kernel):
             passwords=self.passwords,
         )
 
-    # TODO better name
-    def to_play(self, code):
+    def play_from_code(self, code):
         """Support one task, list of tasks, or whole play without hosts."""
-        data = yaml.load(code)
+        data = orig_data = yaml.safe_load(code)
         if isinstance(data, dict) and 'tasks' not in data:
             data = [data]
         if isinstance(data, list):
             data = dict(tasks=data)
+        if not isinstance(data, dict):
+            raise UnknownInput("Expected task, list of tasks, or play, got {}".format(type(orig_data)))
         if 'hosts' not in data:
             data['hosts'] = 'localhost'
         return Play.load(data)
 
     def do_execute(self, code, silent, store_history=True, user_expressions=None, allow_stdin=False):
         try:
-            self.task_queue_manager().run(self.to_play(code))
+            self.task_queue_manager().run(self.play_from_code(code))
         except (yaml.YAMLError, AnsibleParserError) as e:
-            stream_content = {'name': 'stderr', 'text': str(e)}
+            message = ''.join(traceback.format_exception_only(type(e), e))
+            stream_content = {'name': 'stderr', 'text': message}
         else:
             stream_content = {'name': 'stdout', 'text': 'ok'}
 
